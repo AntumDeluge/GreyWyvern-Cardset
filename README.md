@@ -1,8 +1,8 @@
 ## GreyWyvern's Playing Cards Set for PySol
 
-GreyWyvern's free playing card image set ported for use with [PySol](https://www.pysol.org/) & [PySolFC](https://pysolfc.sourceforge.io/).
+[GreyWyvern's free playing card image set](http://www.greywyvern.com/?post=183) ported for use with [PySol](https://www.pysol.org/) & [PySolFC](https://pysolfc.sourceforge.io/).
 
-The original card set can be found here: http://www.greywyvern.com/?post=183
+The original images are located in the [PNG](PNG) directory.
 
 ## Installation
 
