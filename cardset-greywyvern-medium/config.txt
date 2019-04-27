@@ -1,0 +1,6 @@
+PySolFC solitaire cardset;4;.gif;1;52;2,16,1018
+123-cardset-greywyvern-medium;GreyWyvern (medium)
+65 97 8
+16 20 7 7
+back004.gif
+back004.gif;back001.gif;back002.gif;back003.gif;back004.gif;back005.gif;back006.gif;back007.gif;back008.gif;back009.gif;back010.gif;back011.gif;back012.gif;back013.gif
