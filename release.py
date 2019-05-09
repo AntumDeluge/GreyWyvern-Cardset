@@ -18,6 +18,7 @@ exe = os.path.basename(root)
 root = os.path.dirname(root)
 dir_pysol = os.path.join(root, 'PySol')
 dir_release = os.path.join(root, 'release')
+dir_source = os.path.join(root, 'source')
 file_info = os.path.join(root, 'INFO')
 
 exists_dir_release = os.path.isdir(dir_release)
@@ -28,8 +29,11 @@ for idx in range(len(args)):
 
 if 'clean' in args:
     if exists_dir_release:
-        print('\nCleaning ...')
-        shutil.rmtree(dir_release)
+        try:
+            print('\nCleaning ...')
+            shutil.rmtree(dir_release)
+        except PermissionError:
+            print('\nWARNING: "release" directory could not be removed, check if it is locked by another process.')
     else:
         print('\nNothing to do.')
 
@@ -75,6 +79,7 @@ def getInfo(key):
 
     return info[key]
 
+name = getInfo('name').lower().replace(' ', '-')
 version = getInfo('version')
 
 if os.path.exists(dir_release) and not exists_dir_release:
@@ -93,12 +98,29 @@ for idx in reversed(range(len(releases))):
     if not os.path.isdir(os.path.join(dir_pysol, releases[idx])):
         releases.pop(idx)
 
+# source releases
+dir_srcpng = os.path.join(dir_source, 'PNG')
+dir_srcsvg = os.path.join(dir_source, 'SVG')
+
+for S in (dir_srcpng, dir_srcsvg,):
+    if os.path.isdir(S):
+        if S == dir_srcpng:
+            releases.append(name)
+        else:
+            releases.append('{}-svg'.format(name))
+
 if not releases:
-    print('\nERROR: No releases in "PySol" directory.')
+    print('\nERROR: No releases in "PySol" or "source" directories.')
     sys.exit(1)
 
 for REL in releases:
-    src = os.path.join(dir_pysol, REL)
+    if REL == name:
+        src = dir_srcpng
+    elif REL == '{}-svg'.format(name):
+        src = dir_srcsvg
+    else:
+        src = os.path.join(dir_pysol, REL)
+
     tgt = os.path.join(dir_release, REL)
 
     # clean release directory
@@ -117,10 +139,16 @@ for REL in releases:
         print('WARNING: Missing release: {}'.format(REL))
         continue
 
-    if version:
-        file_rel = '{}-{}'.format(REL, version)
-    else:
-        file_rel = '{}'.format(REL)
+    file_rel = REL
+    if REL.startswith('cardset'):
+        file_rel = 'pysol-{}'.format(file_rel)
+        if version:
+            file_rel = '{}-{}'.format(file_rel, version)
+
+    print('Creating release: {}'.format(file_rel))
+
+    if file_rel.startswith('cardset'):
+        file_rel = 'pysol-{}'.format(file_rel)
 
     if os.path.isfile('{}.zip'.format(file_rel)):
         os.remove('{}.zip'.format(file_rel))
